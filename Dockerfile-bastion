@@ -1,0 +1,7 @@
+FROM alpine:latest
+RUN apk update && apk add openssh
+RUN ssh-keygen -A
+RUN adduser -D user
+RUN echo "user:password" | chpasswd
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
