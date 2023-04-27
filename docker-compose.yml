@@ -1,0 +1,27 @@
+version: '3'
+services:
+  bastion:
+    build:
+      context: .
+      dockerfile: Dockerfile-bastion
+    ports:
+      - "2222:22"
+    networks:
+      - private_network
+      - public_network
+  ic1:
+    build:
+      context: .
+      dockerfile: Dockerfile-ic
+    networks:
+      - private_network
+  ic2:
+    build:
+      context: .
+      dockerfile: Dockerfile-ic
+    networks:
+      - private_network
+networks:
+  private_network:
+    internal: true
+  public_network:

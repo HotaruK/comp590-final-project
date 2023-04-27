@@ -1,0 +1,8 @@
+FROM alpine:latest
+RUN apk update && apk add openssh
+RUN ssh-keygen -A
+RUN adduser -D ic-user
+RUN echo "ic-user:pwd" | chpasswd
+RUN echo "I am an isolated container!" > /check.txt
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
