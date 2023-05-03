@@ -1,8 +1,12 @@
-FROM alpine:latest
-RUN apk update && apk add openssh
+FROM nginx:latest
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /run/sshd
 RUN ssh-keygen -A
-RUN adduser -D ic-user
+RUN adduser --disabled-password --gecos "" ic-user
 RUN echo "ic-user:pwd" | chpasswd
-RUN echo "I am an isolated container!" > /check.txt
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+RUN echo "I am an isolated container $(hostname)!" > /check.txt
+COPY default.conf /etc/nginx/conf.d/
+
+EXPOSE 22 80
+CMD sh -c 'echo "<!DOCTYPE html><html><head><title>Isolated Container</title></head><body><h1>I am an isolated container!</h1><p>My name is $CONTAINER_NAME.</p></body></html>" > /usr/share/nginx/html/index.html' && exec /bin/sh -c '/usr/sbin/sshd && nginx -g "daemon off;"'
