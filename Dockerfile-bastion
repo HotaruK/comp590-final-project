@@ -3,5 +3,8 @@ RUN apk update && apk add openssh
 RUN ssh-keygen -A
 RUN adduser -D user
 RUN echo "user:password" | chpasswd
+COPY id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

@@ -19,6 +19,7 @@ services:
       - private_network
     depends_on:
       - load_balancer
+      - bastion
     links:
       - load_balancer
   ic2:
@@ -31,10 +32,13 @@ services:
       - private_network
     depends_on:
       - load_balancer
+      - bastion
     links:
       - load_balancer
   load_balancer:
-    image: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile-lb
     ports:
       - "80:80"
     volumes:

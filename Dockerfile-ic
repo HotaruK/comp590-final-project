@@ -2,11 +2,11 @@ FROM nginx:latest
 
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /run/sshd
-RUN ssh-keygen -A
 RUN adduser --disabled-password --gecos "" ic-user
-RUN echo "ic-user:pwd" | chpasswd
-RUN echo "I am an isolated container $(hostname)!" > /check.txt
 COPY default.conf /etc/nginx/conf.d/
+COPY id_rsa.pub /home/ic-user/.ssh/authorized_keys
+RUN chmod 600 /home/ic-user/.ssh/authorized_keys
+RUN chown -R ic-user:ic-user /home/ic-user/.ssh/
 
 EXPOSE 22 80
-CMD sh -c 'echo "<!DOCTYPE html><html><head><title>Isolated Container</title></head><body><h1>I am an isolated container!</h1><p>My name is $CONTAINER_NAME.</p></body></html>" > /usr/share/nginx/html/index.html' && exec /bin/sh -c '/usr/sbin/sshd && nginx -g "daemon off;"'
+CMD echo "<!DOCTYPE html><html><head><title>Isolated Container</title></head><body><h1>I am an isolated container!</h1><p>My name is $CONTAINER_NAME.</p></body></html>" > /usr/share/nginx/html/index.html && /usr/sbin/sshd && nginx -g "daemon off;"
