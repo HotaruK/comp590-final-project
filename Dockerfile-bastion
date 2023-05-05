@@ -6,6 +6,7 @@ RUN echo "user:password" | chpasswd
 COPY id_rsa /home/user/.ssh/id_rsa
 RUN chown -R user:user /home/user/.ssh
 RUN chmod 600 /home/user/.ssh/id_rsa
+RUN chmod 777 /home/user
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
