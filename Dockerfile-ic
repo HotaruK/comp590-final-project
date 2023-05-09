@@ -7,7 +7,8 @@ COPY default.conf /etc/nginx/conf.d/
 COPY id_rsa.pub /home/ic-user/.ssh/authorized_keys
 RUN chmod 600 /home/ic-user/.ssh/authorized_keys
 RUN chown -R ic-user:ic-user /home/ic-user/.ssh/
-RUN chmod 700 /usr/share/nginx/html
+RUN touch /usr/share/nginx/html/index.html
+RUN chmod 755 /usr/share/nginx/html
 RUN chown -R ic-user:ic-user /usr/share/nginx/html
 
 EXPOSE 22 80
