@@ -1,12 +1,14 @@
 FROM nginx:latest
 
-RUN apt-get update && apt-get install -y openssh-server
+RUN apt-get update && apt-get install -y openssh-server vim
 RUN mkdir /run/sshd
 RUN adduser --disabled-password --gecos "" ic-user
 COPY default.conf /etc/nginx/conf.d/
 COPY id_rsa.pub /home/ic-user/.ssh/authorized_keys
 RUN chmod 600 /home/ic-user/.ssh/authorized_keys
 RUN chown -R ic-user:ic-user /home/ic-user/.ssh/
+RUN chmod 700 /usr/share/nginx/html
+RUN chown -R ic-user:ic-user /usr/share/nginx/html
 
 EXPOSE 22 80
 CMD echo "<!DOCTYPE html><html><head><title>Isolated Container</title></head><body><h1>I am an isolated container!</h1><p>My name is $CONTAINER_NAME.</p></body></html>" > /usr/share/nginx/html/index.html && /usr/sbin/sshd && nginx -g "daemon off;"
